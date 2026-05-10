@@ -1,1 +1,401 @@
 # hello-world
+//1
+void setup() {
+  pinMode(13, OUTPUT);   // Set digital pin 13 as OUTPUT
+}
+
+void loop() {
+  digitalWrite(13, HIGH);  // Turn LED ON
+  delay(3000);             // Wait for 1 second (1000 ms)
+  
+  digitalWrite(13, LOW);   // Turn LED OFF
+  delay(5000);             // Wait for 1 second
+}
+----------------------------------------------------------------------------------------------
+//1
+void setup() {
+  pinMode(13, OUTPUT);
+}
+
+void loop() {
+  digitalWrite(13, HIGH);
+  delay(1000);
+
+  digitalWrite(13, LOW);
+  delay(1000);
+}
+----------------------------------------------------------------------------------------------
+//2
+int ldr = A0;        // Set A0 (Analog Input) for LDR
+int value = 0;       
+
+void setup() {
+  Serial.begin(9600);  
+  pinMode(3, OUTPUT);   // LED connected to pin 3
+}
+
+void loop() {
+  value = analogRead(ldr);   // Read the value of LDR (light)
+
+  Serial.println("LDR value is : ");
+  Serial.println(value);
+
+  if (value < 300) {          // If dark
+    digitalWrite(3, HIGH);    // Turn LED ON
+  }
+  else {                      // If light
+    digitalWrite(3, LOW);     // Turn LED OFF
+  }
+
+  delay(500);
+}
+----------------------------------------------------------------------------------------------
+//2
+int ldr = A0;
+int value = 0;
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(3, OUTPUT);
+}
+
+void loop() {
+  value = analogRead(ldr);
+  Serial.println("LDR value is : ");
+  Serial.println(value);
+
+  if (value < 300) {
+    digitalWrite(3, HIGH);
+  }
+  else {
+    digitalWrite(3, LOW);
+  }
+
+  delay(500);
+}
+----------------------------------------------------------------------------------------------
+//3 
+#include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+
+#define OLED_RESET 4
+Adafruit_SSD1306 display(OLED_RESET);
+
+int greenLed = 2;
+int yellowLed = 3;
+int redLed = 4;
+
+int analogValue = 0;
+float voltage = 0;
+int ledDelay = 1000;
+
+void setup()
+{
+  display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
+  display.display();
+  display.clearDisplay();
+
+  Serial.begin(9600);
+
+  pinMode(greenLed, OUTPUT);
+  pinMode(yellowLed, OUTPUT);
+  pinMode(redLed, OUTPUT);
+}
+
+void loop()
+{
+  analogValue = analogRead(A0);
+
+  voltage = 0.0010 * analogValue;
+
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setTextColor(WHITE);
+  display.setCursor(0, 0);
+  display.println("Battery Voltage");
+  display.println("");
+  display.println("");
+
+  display.setTextSize(3);
+  display.print(" ");
+  display.println(voltage);
+  display.display();
+
+  Serial.println(voltage);
+
+  if (voltage >= 1.35)
+  {
+    digitalWrite(greenLed, HIGH);
+  }
+  else if (voltage > 1.2 && voltage < 1.35)
+  {
+    digitalWrite(yellowLed, HIGH);
+  }
+  else if (voltage <= 1.2)
+  {
+    digitalWrite(redLed, HIGH);
+  }
+
+  delay(ledDelay);
+
+  digitalWrite(redLed, LOW);
+  digitalWrite(yellowLed, LOW);
+  digitalWrite(greenLed, LOW);
+}
+----------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------
+//4
+#include <LiquidCrystal.h>
+
+LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
+int randomnumber;
+
+void setup() {
+  lcd.begin(16, 2);        // Initialize 16x2 LCD
+  randomSeed(7);           // Seed for random function
+  pinMode(8, INPUT);       // Push button connected to pin 8
+}
+
+void loop() {
+  lcd.setCursor(2, 0);
+  lcd.print("Dice value is:");
+
+  int DICEROLL = digitalRead(8);
+
+  if (DICEROLL == 1) {
+    randomnumber = random(1, 7);   // Generate number between 1 and 6
+    lcd.setCursor(6, 1);
+    lcd.print(randomnumber);
+    delay(500);                    // Small delay
+  }
+}
+----------------------------------------------------------------------------------------------
+//4
+#include <LiquidCrystal.h>
+
+LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
+int randomnumber;
+
+void setup() {
+  lcd.begin(16, 2);
+  randomSeed(7);
+  pinMode(8, INPUT);
+}
+
+void loop() {
+  lcd.setCursor(2, 0);
+  lcd.print("Dice value is:");
+
+  int DICEROLL = digitalRead(8);
+
+  if (DICEROLL == 1) {
+    randomnumber = random(1, 7);
+    lcd.setCursor(6, 1);
+    lcd.print(randomnumber);
+    delay(500);
+  }
+}
+----------------------------------------------------------------------------------------------
+//5
+#include <DHT.h>
+
+// Define the DHT sensor type and pin
+#define DHTPIN 8        // Digital pin connected to DHT sensor
+#define DHTTYPE DHT22   // DHT 22 (AM2302)
+
+DHT dht(DHTPIN, DHTTYPE);
+
+void setup() {
+  Serial.begin(9600);
+  Serial.println("DHT22 Temperature and Humidity Sensor");
+  dht.begin();
+}
+
+void loop() {
+  delay(2000);   
+
+  // Read temperature and humidity
+  float humidity = dht.readHumidity();
+  float temperature = dht.readTemperature();
+
+  // Print values to Serial Monitor
+  Serial.print("Temperature: ");
+  Serial.print(temperature);
+  Serial.print(" *C  ");
+
+  Serial.print("Humidity: ");
+  Serial.print(humidity);
+  Serial.println(" %");
+}
+----------------------------------------------------------------------------------------------
+//5
+#include <DHT.h>
+
+#define DHTPIN 8
+#define DHTTYPE DHT22
+
+DHT dht(DHTPIN, DHTTYPE);
+
+void setup() {
+  Serial.begin(9600);
+  Serial.println("DHT22 Temperature and Humidity Sensor");
+  dht.begin();
+}
+
+void loop() {
+  delay(2000);
+
+  float humidity = dht.readHumidity();
+  float temperature = dht.readTemperature();
+
+  Serial.print("Temperature: ");
+  Serial.print(temperature);
+  Serial.print(" *C  ");
+  Serial.print("Humidity: ");
+  Serial.print(humidity);
+  Serial.println(" %");
+}
+----------------------------------------------------------------------------------------------
+9.camera
+a.capture
+from picamera import PiCamera
+from time import sleep
+
+camera = PiCamera()
+camera.rotation = 180
+
+camera.start_preview()
+sleep(5)
+camera.capture('/home/pi/Desktop/image.jpg')
+camera.stop_preview()
+
+b.modify
+
+from picamera import PiCamera, Color
+from time import sleep
+
+camera = PiCamera()
+camera.rotation = 180
+
+camera.start_preview()
+camera.image_effect = 'watercolor'
+camera.annotate_background = Color('yellow')
+camera.annotate_foreground = Color('blue')
+camera.annotate_text_size = 80
+camera.annotate_text = "Hello KMIT"
+
+sleep(5)
+camera.capture('/home/pi/Desktop/modified.jpg')
+camera.stop_preview()
+
+
+c.video
+
+from picamera import PiCamera, Color
+from time import sleep
+
+camera = PiCamera()
+camera.rotation = 180
+
+camera.start_preview()
+
+camera.annotate_background = Color('yellow')
+camera.annotate_foreground = Color('blue')
+camera.annotate_text_size = 80
+camera.annotate_text = "KMIT IT"
+
+camera.start_recording('/home/pi/Desktop/video.h264')
+sleep(5)
+camera.stop_recording()
+
+camera.stop_preview()
+
+
+
+8.ultra
+
+
+import RPi.GPIO as GPIO
+import time
+
+GPIO.setmode(GPIO.BCM)
+
+GPIO_TRIGGER = 12
+GPIO_ECHO = 18
+
+GPIO.setup(GPIO_TRIGGER, GPIO.OUT)
+GPIO.setup(GPIO_ECHO, GPIO.IN)
+
+def distance():
+    GPIO.output(GPIO_TRIGGER, True)
+    time.sleep(0.00001)
+    GPIO.output(GPIO_TRIGGER, False)
+
+    start = time.time()
+    stop = time.time()
+
+    while GPIO.input(GPIO_ECHO) == 0:
+        start = time.time()
+
+    while GPIO.input(GPIO_ECHO) == 1:
+        stop = time.time()
+
+    time_elapsed = stop - start
+    dist = (time_elapsed * 34300) / 2
+
+    return dist
+
+if __name__ =='__main__'
+	try:
+		while True:
+    			d = distance()
+    			print("Distance:", d, "cm")
+    			time.sleep(1)
+	except KeyboardInterrupt:
+		print("measurement stopped by user");
+	GPIO.cleanup();
+
+
+6.pir
+
+import RPi.GPIO as GPIO
+import time
+
+GPIO.setwarnings(False)
+GPIO.setmode(GPIO.BOARD)
+
+# PIR input pin
+GPIO.setup(11, GPIO.IN)
+
+# LED output pin
+GPIO.setup(3, GPIO.OUT)
+
+while True:
+    i=GPIO.input(11);
+    if i==0:
+        print("person Detected!")
+        GPIO.output(3, True)
+        time.sleep(1)
+    elif i==1:
+        print("No person Detected!")
+        GPIO.output(3, False)
+        time.sleep(1)
+
+
+
+6.led
+
+import RPi.GPIO as GPIO
+import time
+
+GPIO.setmode(GPIO.BOARD)
+
+while True:
+    GPIO.setup(8, GPIO.OUT)
+    
+    GPIO.output(8, GPIO.HIGH)
+    time.sleep(2)
+    
+    GPIO.output(8, GPIO.LOW)
+    time.sleep(2)
